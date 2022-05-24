@@ -1,6 +1,6 @@
 from datahandler import *
 from autoaugment import CIFAR10Policy, Cutout
-# from thop import clever_format, profile
+from thop import clever_format, profile
 
 import random
 import torch
