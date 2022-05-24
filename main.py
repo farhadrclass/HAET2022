@@ -15,6 +15,7 @@ import torchvision.transforms as transforms
 import time
 import sys
 from scalable_senet import *
+from conv_mix import *
 
 
 def initialize(model):
