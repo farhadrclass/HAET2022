@@ -23,6 +23,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--name', type=str, default="ConvMixer")
+parser.add_argument('--dataLoc', type=str, default="./data")
 
 parser.add_argument('--batch-size', default=512, type=int)
 parser.add_argument('--scale', default=0.75, type=float)
@@ -141,8 +142,11 @@ optimizer = optim.SGD(model.parameters(), lr=0.042, momentum=0.9, weight_decay=0
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=240, eta_min=1e-8)
 
 
-
-# optimizer = optim.AdamW(model.parameters(), lr=args.lr_max, weight_decay=args.wd)
+# if opt_flag=1:
+   # optimizer = optim.AdamW(model.parameters(), lr=args.lr_max, weight_decay=args.wd)
+# else:
+# optimizer = optim.SGD(model.parameters(), lr=0.042, momentum=0.9, weight_decay=0.005)
+# 
 # scaler = torch.cuda.amp.GradScaler()
 
 
@@ -154,10 +158,10 @@ scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=240, eta
 # --------------------------------------------
 
 trainset = torchvision.datasets.CIFAR10(
-    root='./data', train=True, download=True, transform=transform_train)
+    root=args.dataLoc, train=True, download=True, transform=transform_train)
 
 testset = torchvision.datasets.CIFAR10(
-    root='./data', train=False, download=True, transform=transform_test)
+    root=args.dataLoc, train=False, download=True, transform=transform_test)
 
 y_train = trainset.targets
 y_test = testset.targets
