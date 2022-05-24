@@ -17,6 +17,33 @@ import sys
 from scalable_senet import *
 from conv_mix import *
 
+import argparse
+
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--name', type=str, default="ConvMixer")
+
+parser.add_argument('--batch-size', default=512, type=int)
+parser.add_argument('--scale', default=0.75, type=float)
+parser.add_argument('--reprob', default=0.25, type=float)
+parser.add_argument('--ra-m', default=8, type=int)
+parser.add_argument('--ra-n', default=1, type=int)
+parser.add_argument('--jitter', default=0.1, type=float)
+
+parser.add_argument('--hdim', default=256, type=int)
+parser.add_argument('--depth', default=8, type=int)
+parser.add_argument('--psize', default=2, type=int)
+parser.add_argument('--conv-ks', default=5, type=int)
+
+parser.add_argument('--wd', default=0.01, type=float)
+parser.add_argument('--clip-norm', action='store_true')
+parser.add_argument('--epochs', default=25, type=int)
+parser.add_argument('--lr-max', default=0.01, type=float)
+parser.add_argument('--workers', default=1, type=int)
+
+args = parser.parse_args()
+
 
 def initialize(model):
     for m in model.modules():
@@ -96,7 +123,10 @@ transform_test = transforms.Compose([
 
 # Architecture
 print('==> Building network architecture..')
-model = scaled_senet(1, 0.67, initial_image_size)
+# model = scaled_senet(1, 0.67, initial_image_size)
+model = ConvMixer(args.hdim, args.depth, patch_size=args.psize, kernel_size=args.conv_ks, n_classes=10)
+model = nn.DataParallel(model).cuda()
+
 model.to(device)
 print(model)
 
@@ -109,6 +139,14 @@ print('==> Defining the Optimizer and its hyperparameters..')
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.042, momentum=0.9, weight_decay=0.005)
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=240, eta_min=1e-8)
+
+
+
+# optimizer = optim.AdamW(model.parameters(), lr=args.lr_max, weight_decay=args.wd)
+# scaler = torch.cuda.amp.GradScaler()
+
+
+
 
 # --------------------------------------------
 # Dataset - Cifar10
