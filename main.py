@@ -19,7 +19,7 @@ from conv_mix import *
 
 import argparse
 
-
+#--lr-max=0.05 --ra-n=2 --ra-m=12 --wd=0.005 --scale=1.0 --jitter=0 --reprob=0
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--name', type=str, default="ConvMixer")
@@ -40,7 +40,7 @@ parser.add_argument('--conv-ks', default=5, type=int)
 parser.add_argument('--wd', default=0.01, type=float)
 parser.add_argument('--clip-norm', action='store_true')
 parser.add_argument('--epochs', default=25, type=int)
-parser.add_argument('--lr-max', default=0.01, type=float)
+parser.add_argument('--lr-max', default=0.042, type=float)
 parser.add_argument('--workers', default=1, type=int)
 
 args = parser.parse_args()
@@ -138,7 +138,7 @@ if device == 'cuda':
 # Optimizer
 print('==> Defining the Optimizer and its hyperparameters..')
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr=0.042, momentum=0.9, weight_decay=0.005)
+optimizer = optim.SGD(model.parameters(), lr=args.lr_max, momentum=0.9, weight_decay=0.005)
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=240, eta_min=1e-8)
 
 
