@@ -40,7 +40,7 @@ parser.add_argument('--conv-ks', default=5, type=int)
 parser.add_argument('--wd', default=0.01, type=float)
 parser.add_argument('--clip-norm', action='store_true')
 parser.add_argument('--epochs', default=25, type=int)
-parser.add_argument('--lr-max', default=0.0568735, type=float)
+parser.add_argument('--lr-max', default=0.05687350000000, type=float)
 parser.add_argument('--workers', default=1, type=int)
 
 args = parser.parse_args()
@@ -138,8 +138,9 @@ if device == 'cuda':
 # Optimizer
 print('==> Defining the Optimizer and its hyperparameters..')
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr=args.lr_max, momentum=0.98, weight_decay= 0.0008)
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=240, eta_min=1e-8)
+optimizer = optim.SGD(model.parameters(), lr=args.lr_max, momentum=0.980121000000000, weight_decay= 0.0008,dampening= 0.211911800000000)
+# scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=240, eta_min=1e-8)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=140, eta_min=0.01)
 
 
 # if opt_flag=1:
